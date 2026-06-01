@@ -3,7 +3,7 @@ using AcademiaMusica.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AcademiaMusica.Pages.Alumnos
+namespace AcademiaMusica.Pages.Profesores
 {
     public class IndexModel : PageModel
     {
@@ -14,16 +14,16 @@ namespace AcademiaMusica.Pages.Alumnos
             _db = db;
         }
 
-        public IList<Alumno> Alumnos { get; set; }
+        public IList<Profesor> Profesores { get; set; }
 
         public async Task OnGetAsync()
         {
-            Alumnos = await _db.GetAlumnos();
+            Profesores = await _db.GetProfesores();
         }
 
         public async Task<IActionResult> OnPostEliminarAsync(int id)
         {
-            await _db.DeleteAlumno(id);
+            await _db.DeleteProfesor(id);
             return RedirectToPage();
         }
     }

@@ -3,9 +3,13 @@
 @{
     ViewData["Title"] = "Gestión de Alumnos";
 }
+
 <h2>Gestión de Alumnos</h2>
-<table class="table">
-    <thead>
+
+<a asp-page="./Crear" class="btn btn-success mb-3">+ Nuevo Alumno</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
@@ -13,22 +17,30 @@
             <th>Email</th>
             <th>Fecha Nac.</th>
             <th>Activo</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var alumno in Model.Alumnos)
+        @foreach (var a in Model.Alumnos)
         {
             <tr>
-                <td>@alumno.NombreAlumno</td>
-                <td>@alumno.ApellidoAlumno</td>
-                <td>@alumno.TelefonoAlumno</td>
-                <td>@alumno.EmailAlumno</td>
-                <td>@(alumno.FechaNacimiento.HasValue ? alumno.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")</td>
-                <td>@(alumno.ActivoAlumno ? "Sí" : "No")</td>
+                <td>@a.NombreAlumno</td>
+                <td>@a.ApellidoAlumno</td>
+                <td>@a.TelefonoAlumno</td>
+                <td>@a.EmailAlumno</td>
+                <td>@(a.FechaNacimiento.HasValue ? a.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")</td>
+                <td>@(a.ActivoAlumno ? "Sí" : "No")</td>
+                <td>
+                    <a asp-page="./Editar" asp-route-id="@a.IdAlumno" class="btn btn-warning btn-sm">Editar</a>
+                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@a.IdAlumno" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar a @a.NombreAlumno?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-<div>
-    <a asp-page="./Crear">Crear nuevo Alumno</a>
-</div>
+

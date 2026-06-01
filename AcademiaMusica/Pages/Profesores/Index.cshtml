@@ -1,0 +1,49 @@
+﻿@page
+@model AcademiaMusica.Pages.Profesores.IndexModel
+@{
+    ViewData["Title"] = "Gestión de Profesores";
+}
+
+<h2>Gestión de Profesores</h2>
+
+<a asp-page="./Crear" class="btn btn-success mb-3">+ Nuevo Profesor</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Especialidad</th>
+            <th>Tarifa/Hora</th>
+            <th>Con IVA</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Profesores)
+        {
+            <tr>
+                <td>@p.NombreProfesor</td>
+                <td>@p.ApellidoProfesor</td>
+                <td>@p.TelefonoProfesor</td>
+                <td>@p.EmailProfesor</td>
+                <td>@p.Especialidad</td>
+                <td>$@p.TarifaHora.ToString("N0")</td>
+                <td>$@p.TarifaConIVA.ToString("N0")</td>
+                <td>@(p.ActivoProfesor ? "Sí" : "No")</td>
+                <td>
+                    <a asp-page="./Editar" asp-route-id="@p.IdProfesor" class="btn btn-warning btn-sm">Editar</a>
+                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.IdProfesor" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar a @p.NombreProfesor?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

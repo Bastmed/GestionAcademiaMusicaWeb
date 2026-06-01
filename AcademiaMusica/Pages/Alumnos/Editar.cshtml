@@ -1,0 +1,39 @@
+﻿@page "{id:int}"
+@model AcademiaMusica.Pages.Alumnos.EditarModel
+@{
+    ViewData["Title"] = "Editar Alumno";
+}
+
+<h2>Editar Alumno</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Alumno.IdAlumno" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Alumno.NombreAlumno" class="control-label">Nombre</label>
+        <input asp-for="Alumno.NombreAlumno" class="form-control" required />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Alumno.ApellidoAlumno" class="control-label">Apellido</label>
+        <input asp-for="Alumno.ApellidoAlumno" class="form-control" required />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Alumno.FechaNacimiento" class="control-label">Fecha de Nacimiento</label>
+        <input asp-for="Alumno.FechaNacimiento" type="date" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Alumno.TelefonoAlumno" class="control-label">Teléfono</label>
+        <input asp-for="Alumno.TelefonoAlumno" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Alumno.EmailAlumno" class="control-label">Email</label>
+        <input asp-for="Alumno.EmailAlumno" type="email" class="form-control" />
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="Alumno.ActivoAlumno" class="form-check-input" />
+        <label asp-for="Alumno.ActivoAlumno" class="form-check-label">Activo</label>
+    </div>
+
+    <input type="submit" value="Guardar cambios" class="btn btn-success" />
+    <a asp-page="./Index" class="btn btn-secondary">Cancelar</a>
+</form>

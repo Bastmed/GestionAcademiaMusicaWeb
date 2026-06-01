@@ -4,22 +4,54 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="container mt-5">
-    <div class="text-center mb-5">
-        <h1 class="display-4">🎵 Academia de Música Kong Egg</h1>
-        <p class="lead text-muted">Sistema de gestión</p>
-    </div>
+<div class="row justify-content-center g-4">
 
-    <div class="row justify-content-center g-4">
-        <div class="col-md-4">
-            <div class="card text-center shadow">
-                <div class="card-body p-4">
-                    <h2>🎓</h2>
-                    <h5 class="card-title mt-2">Alumnos</h5>
-                    <p class="card-text text-muted">Gestión de alumnos de la academia</p>
-                    <a href="/Alumnos" class="btn btn-success w-100">Gestionar</a>
-                </div>
+    <!-- ALUMNOS -->
+    <div class="col-md-4">
+        <div class="card text-center shadow h-100">
+            <div class="card-body p-4">
+                <h2>🎓</h2>
+                <h5 class="card-title mt-2">Alumnos</h5>
+                <p class="card-text text-muted">
+                    Gestión de alumnos de la academia
+                </p>
+                <a href="/Alumnos" class="btn btn-success w-100">
+                    Gestionar
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- PROFESORES -->
+    <div class="col-md-4">
+        <div class="card text-center shadow h-100">
+            <div class="card-body p-4">
+                <h2>👨‍🏫</h2>
+                <h5 class="card-title mt-2">Profesores</h5>
+                <p class="card-text text-muted">
+                    Gestión de profesores de la academia
+                </p>
+                <a href="/Profesores" class="btn btn-primary w-100">
+                    Gestionar
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSTRUMENTOS -->
+    <div class="col-md-4">
+        <div class="card text-center shadow h-100">
+            <div class="card-body p-4">
+                <h2>🎸</h2>
+                <h5 class="card-title mt-2">Instrumentos</h5>
+                <p class="card-text text-muted">
+                    Gestión de instrumentos musicales
+                </p>
+                <a href="/Instrumentos" class="btn btn-warning w-100">
+                    Gestionar
+                </a>
+            </div>
+        </div>
+    </div>
+
 </div>

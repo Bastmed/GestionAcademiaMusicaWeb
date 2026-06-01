@@ -28,7 +28,8 @@ namespace AcademiaMusica.Pages.Alumnos
                 Alumno.FechaNacimiento,
                 Alumno.TelefonoAlumno,
                 Alumno.EmailAlumno,
-                Alumno.ActivoAlumno
+                Alumno.ActivoAlumno,
+                Alumno.IdInstrumento
             );
 
             return RedirectToPage("./Index");

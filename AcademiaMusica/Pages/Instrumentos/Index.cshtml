@@ -1,5 +1,41 @@
 ﻿@page
 @model AcademiaMusica.Pages.Instrumentos.IndexModel
 @{
-
+    ViewData["Title"] = "Gestión de Instrumentos";
 }
+
+<h2>Gestión de Instrumentos</h2>
+
+<a asp-page="./Crear" class="btn btn-success mb-3">+ Nuevo Instrumento</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Marca</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in Model.Instrumentos)
+        {
+            <tr>
+                <td>@i.NombreInstrumento</td>
+                <td>@i.Categoria</td>
+                <td>@i.Marca</td>
+                <td>@i.Estado</td>
+                <td>
+                    <a asp-page="./Editar" asp-route-id="@i.IdInstrumento" class="btn btn-warning btn-sm">Editar</a>
+                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@i.IdInstrumento" style="display:inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Estás seguro de eliminar @i.NombreInstrumento?')">
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
