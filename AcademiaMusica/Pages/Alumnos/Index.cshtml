@@ -1,0 +1,34 @@
+﻿@page
+@model AcademiaMusica.Pages.Alumnos.IndexModel
+@{
+    ViewData["Title"] = "Gestión de Alumnos";
+}
+<h2>Gestión de Alumnos</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Fecha Nac.</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var alumno in Model.Alumnos)
+        {
+            <tr>
+                <td>@alumno.NombreAlumno</td>
+                <td>@alumno.ApellidoAlumno</td>
+                <td>@alumno.TelefonoAlumno</td>
+                <td>@alumno.EmailAlumno</td>
+                <td>@(alumno.FechaNacimiento.HasValue ? alumno.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")</td>
+                <td>@(alumno.ActivoAlumno ? "Sí" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-page="./Crear">Crear nuevo Alumno</a>
+</div>

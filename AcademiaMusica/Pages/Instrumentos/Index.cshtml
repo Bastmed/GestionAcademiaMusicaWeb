@@ -1,28 +1,5 @@
 ﻿@page
 @model AcademiaMusica.Pages.Instrumentos.IndexModel
+@{
 
-<h2>Instrumentos</h2>
-
-<a href="/Instrumentos/Crear">Agregar instrumento</a>
-
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Marca</th>
-            <th>Estado</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var i in Model.Instrumentos)
-        {
-            <tr>
-                <td>@i.NombreInstrumento</td>
-                <td>@i.Categoria</td>
-                <td>@i.Marca</td>
-                <td>@i.Estado</td>
-            </tr>
-        }
-    </tbody>
-</table>
+}
