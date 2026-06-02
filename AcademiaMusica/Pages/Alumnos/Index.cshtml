@@ -4,43 +4,73 @@
     ViewData["Title"] = "Gestión de Alumnos";
 }
 
-<h2>Gestión de Alumnos</h2>
+<div class="page-heading">
+    <h2> Alumnos</h2>
+    <div class="heading-line"></div>
+</div>
 
-<a asp-page="./Crear" class="btn btn-success mb-3">+ Nuevo Alumno</a>
+<div class="card-dark">
+    <div class="table-toolbar">
+        <a asp-page="./Crear" class="btn-accent-green">+ Nuevo Alumno</a>
+        <div class="search-bar" style="width:280px">
+            <span class="search-icon"></span>
+            <input type="text" id="searchBox" placeholder="Buscar alumno..." oninput="filtrarTabla(this.value)" />
+        </div>
+    </div>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Teléfono</th>
-            <th>Email</th>
-            <th>Fecha Nac.</th>
-            <th>Activo</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var a in Model.Alumnos)
-        {
+    <table class="table-dark-custom" id="tablaAlumnos">
+        <thead>
             <tr>
-                <td>@a.NombreAlumno</td>
-                <td>@a.ApellidoAlumno</td>
-                <td>@a.TelefonoAlumno</td>
-                <td>@a.EmailAlumno</td>
-                <td>@(a.FechaNacimiento.HasValue ? a.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "-")</td>
-                <td>@(a.ActivoAlumno ? "Sí" : "No")</td>
-                <td>
-                    <a asp-page="./Editar" asp-route-id="@a.IdAlumno" class="btn btn-warning btn-sm">Editar</a>
-                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@a.IdAlumno" style="display:inline">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Estás seguro de eliminar a @a.NombreAlumno?')">
-                            Eliminar
-                        </button>
-                    </form>
-                </td>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Fecha Nac.</th>
+                <th>Estado</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var a in Model.Alumnos)
+            {
+                <tr>
+                    <td>@a.NombreAlumno</td>
+                    <td>@a.ApellidoAlumno</td>
+                    <td>@a.TelefonoAlumno</td>
+                    <td>@a.EmailAlumno</td>
+                    <td>@(a.FechaNacimiento.HasValue? a.FechaNacimiento.Value.ToString("dd/MM/yyyy") : "—")</td>
+                    <td>
+                        @if (a.ActivoAlumno)
+                        {
+                            <span class="badge-activo si">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge-activo no">Inactivo</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-page="./Editar" asp-route-id="@a.IdAlumno" class="btn-edit">✏ Editar</a>
+                        <form method="post" asp-page-handler="Eliminar" asp-route-id="@a.IdAlumno" style="display:inline">
+                            <button type="submit" class="btn-delete"
+                                    onclick="return confirm('¿Eliminar a @a.NombreAlumno @a.ApellidoAlumno?')">
+                                 Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
+@section Scripts {
+    <script>
+        function filtrarTabla(q) {
+            q = q.toLowerCase();
+            document.querySelectorAll('#tablaAlumnos tbody tr').forEach(tr => {
+                tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+    </script>
+}

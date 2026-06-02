@@ -4,38 +4,67 @@
     ViewData["Title"] = "Gestión de Instrumentos";
 }
 
-<h2>Gestión de Instrumentos</h2>
+<div class="page-heading">
+    <h2> Instrumentos</h2>
+    <div class="heading-line"></div>
+</div>
 
-<a asp-page="./Crear" class="btn btn-success mb-3">+ Nuevo Instrumento</a>
+<div class="card-dark">
+    <div class="table-toolbar">
+        <a asp-page="./Crear" class="btn-accent-green" style="background: linear-gradient(135deg,#4fc3f7,#0288d1); color:#000;">+ Nuevo Instrumento</a>
+        <div class="search-bar" style="width:280px">
+            <span class="search-icon"></span>
+            <input type="text" placeholder="Buscar instrumento..." oninput="filtrarTabla(this.value)" />
+        </div>
+    </div>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Nombre</th>
-            <th>Categoría</th>
-            <th>Marca</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var i in Model.Instrumentos)
-        {
+    <table class="table-dark-custom" id="tablaInstrumentos">
+        <thead>
             <tr>
-                <td>@i.NombreInstrumento</td>
-                <td>@i.Categoria</td>
-                <td>@i.Marca</td>
-                <td>@i.Estado</td>
-                <td>
-                    <a asp-page="./Editar" asp-route-id="@i.IdInstrumento" class="btn btn-warning btn-sm">Editar</a>
-                    <form method="post" asp-page-handler="Eliminar" asp-route-id="@i.IdInstrumento" style="display:inline">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Estás seguro de eliminar @i.NombreInstrumento?')">
-                            Eliminar
-                        </button>
-                    </form>
-                </td>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Marca</th>
+                <th>Estado</th>
+                <th>Acciones</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.Instrumentos)
+            {
+                var estadoClass = i.Estado switch
+                {
+                    "Disponible" => "disponible",
+                    "En uso" => "en-uso",
+                    "En mantenimiento" => "mantenimiento",
+                    _ => "otro"
+                };
+                <tr>
+                    <td>@i.NombreInstrumento</td>
+                    <td>@i.Categoria</td>
+                    <td>@i.Marca</td>
+                    <td><span class="badge-estado @estadoClass">@i.Estado</span></td>
+                    <td>
+                        <a asp-page="./Editar" asp-route-id="@i.IdInstrumento" class="btn-edit">✏ Editar</a>
+                        <form method="post" asp-page-handler="Eliminar" asp-route-id="@i.IdInstrumento" style="display:inline">
+                            <button type="submit" class="btn-delete"
+                                    onclick="return confirm('¿Eliminar @i.NombreInstrumento?')">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        function filtrarTabla(q) {
+            q = q.toLowerCase();
+            document.querySelectorAll('#tablaInstrumentos tbody tr').forEach(tr => {
+                tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
         }
-    </tbody>
-</table>
+    </script>
+}

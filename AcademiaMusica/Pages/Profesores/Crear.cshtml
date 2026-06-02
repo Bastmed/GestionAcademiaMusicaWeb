@@ -4,62 +4,94 @@
     ViewData["Title"] = "Crear Profesor";
 }
 
-<h2>Crear Profesor</h2>
+<div class="page-heading">
+    <h2> Nuevo Profesor</h2>
+    <div class="heading-line"></div>
+</div>
 
-<form method="post">
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.NombreProfesor" class="control-label">Nombre</label>
-        <input asp-for="Profesor.NombreProfesor" class="form-control" required />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.ApellidoProfesor" class="control-label">Apellido</label>
-        <input asp-for="Profesor.ApellidoProfesor" class="form-control" required />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.TelefonoProfesor" class="control-label">Teléfono</label>
-        <input asp-for="Profesor.TelefonoProfesor" class="form-control" />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.EmailProfesor" class="control-label">Email</label>
-        <input asp-for="Profesor.EmailProfesor" type="email" class="form-control" />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.Especialidad" class="control-label">Especialidad</label>
-        <select asp-for="Profesor.Especialidad" class="form-control">
-            <option value="">-- Selecciona --</option>
-            <option>Guitarra Clásica</option>
-            <option>Guitarra Eléctrica</option>
-            <option>Bajo Eléctrico</option>
-            <option>Piano</option>
-            <option>Violín</option>
-            <option>Violoncello</option>
-            <option>Contrabajo</option>
-            <option>Flauta Traversa</option>
-            <option>Clarinete</option>
-            <option>Saxofón</option>
-            <option>Trompeta</option>
-            <option>Trombón</option>
-            <option>Percusión Clásica</option>
-            <option>Batería</option>
-            <option>Arpa</option>
-            <option>Canto Lírico</option>
-            <option>Canto Popular</option>
-            <option>Charango</option>
-            <option>Quena</option>
-            <option>Teoría Musical y Solfeo</option>
-            <option>Composición</option>
-            <option>Dirección Coral</option>
-        </select>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Profesor.TarifaHora" class="control-label">Tarifa por Hora ($)</label>
-        <input asp-for="Profesor.TarifaHora" type="number" class="form-control" min="1" required />
-    </div>
-    <div class="form-check mb-3">
-        <input asp-for="Profesor.ActivoProfesor" class="form-check-input" />
-        <label asp-for="Profesor.ActivoProfesor" class="form-check-label">Activo</label>
-    </div>
+<div class="card-dark">
+    <form method="post">
+        <div class="form-grid">
 
-    <input type="submit" value="Crear" class="btn btn-success" />
-    <a asp-page="./Index" class="btn btn-secondary">Cancelar</a>
-</form>
+            <div class="form-field">
+                <label> Nombre</label>
+                <input asp-for="Profesor.NombreProfesor" placeholder="Ej: Carlos" required />
+            </div>
+
+            <div class="form-field">
+                <label> Apellido</label>
+                <input asp-for="Profesor.ApellidoProfesor" placeholder="Ej: Ramírez" required />
+            </div>
+
+            <div class="form-field">
+                <label> Teléfono</label>
+                <input asp-for="Profesor.TelefonoProfesor" placeholder="+56 912345678" />
+            </div>
+
+            <div class="form-field">
+                <label> Email</label>
+                <input asp-for="Profesor.EmailProfesor" type="email" placeholder="usuario@email.com" />
+            </div>
+
+            <div class="form-field">
+                <label> Especialidad</label>
+                <select asp-for="Profesor.Especialidad">
+                    <option value="">-- Selecciona --</option>
+                    <option>Guitarra Clásica</option>
+                    <option>Guitarra Eléctrica</option>
+                    <option>Bajo Eléctrico</option>
+                    <option>Piano</option>
+                    <option>Violín</option>
+                    <option>Violoncello</option>
+                    <option>Contrabajo</option>
+                    <option>Flauta Traversa</option>
+                    <option>Clarinete</option>
+                    <option>Saxofón</option>
+                    <option>Trompeta</option>
+                    <option>Trombón</option>
+                    <option>Percusión Clásica</option>
+                    <option>Batería</option>
+                    <option>Arpa</option>
+                    <option>Canto Lírico</option>
+                    <option>Canto Popular</option>
+                    <option>Charango</option>
+                    <option>Quena</option>
+                    <option>Teoría Musical y Solfeo</option>
+                    <option>Composición</option>
+                    <option>Dirección Coral</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label> Tarifa por Hora ($)</label>
+                <input asp-for="Profesor.TarifaHora" type="number" min="1" id="tarifaInput" placeholder="Ej: 15000" required />
+                <div class="tarifa-preview" id="tarifaPreview">Con IVA (19%): $0</div>
+            </div>
+
+            <div class="form-field">
+                <label>Estado</label>
+                <div class="checkbox-row">
+                    <input asp-for="Profesor.ActivoProfesor" type="checkbox" />
+                    <span>Profesor activo</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-accent-purple">✔ Registrar Profesor</button>
+            <a asp-page="./Index" class="btn-outline-dim">✕ Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('tarifaInput')?.addEventListener('input', function() {
+            const v = parseFloat(this.value) || 0;
+            const iva = Math.round(v * 1.19);
+            document.getElementById('tarifaPreview').textContent =
+                'Con IVA (19%): $' + iva.toLocaleString('es-CL');
+        });
+    </script>
+}

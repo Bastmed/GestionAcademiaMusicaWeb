@@ -4,54 +4,32 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="row justify-content-center g-4">
+<div class="page-heading">
+    <h2>Panel de Control</h2>
+    <div class="heading-line"></div>
+</div>
 
-    <!-- ALUMNOS -->
-    <div class="col-md-4">
-        <div class="card text-center shadow h-100">
-            <div class="card-body p-4">
-                <h2>🎓</h2>
-                <h5 class="card-title mt-2">Alumnos</h5>
-                <p class="card-text text-muted">
-                    Gestión de alumnos de la academia
-                </p>
-                <a href="/Alumnos" class="btn btn-success w-100">
-                    Gestionar
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="dash-grid">
 
-    <!-- PROFESORES -->
-    <div class="col-md-4">
-        <div class="card text-center shadow h-100">
-            <div class="card-body p-4">
-                <h2>👨‍🏫</h2>
-                <h5 class="card-title mt-2">Profesores</h5>
-                <p class="card-text text-muted">
-                    Gestión de profesores de la academia
-                </p>
-                <a href="/Profesores" class="btn btn-primary w-100">
-                    Gestionar
-                </a>
-            </div>
-        </div>
-    </div>
+    <a href="/Alumnos" class="dash-card card-green">
+        <span class="card-emoji">🎓</span>
+        <h5>Alumnos</h5>
+        <p>Gestión de alumnos de la academia</p>
+        <span class="dash-btn">Gestionar</span>
+    </a>
 
-    <!-- INSTRUMENTOS -->
-    <div class="col-md-4">
-        <div class="card text-center shadow h-100">
-            <div class="card-body p-4">
-                <h2>🎸</h2>
-                <h5 class="card-title mt-2">Instrumentos</h5>
-                <p class="card-text text-muted">
-                    Gestión de instrumentos musicales
-                </p>
-                <a href="/Instrumentos" class="btn btn-warning w-100">
-                    Gestionar
-                </a>
-            </div>
-        </div>
-    </div>
+    <a href="/Profesores" class="dash-card card-purple">
+        <span class="card-emoji">👨‍🏫</span>
+        <h5>Profesores</h5>
+        <p>Gestión de profesores y tarifas</p>
+        <span class="dash-btn">Gestionar</span>
+    </a>
+
+    <a href="/Instrumentos" class="dash-card card-blue">
+        <span class="card-emoji">🎸</span>
+        <h5>Instrumentos</h5>
+        <p>Gestión de instrumentos musicales</p>
+        <span class="dash-btn">Gestionar</span>
+    </a>
 
 </div>

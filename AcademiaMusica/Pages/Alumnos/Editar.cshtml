@@ -4,36 +4,54 @@
     ViewData["Title"] = "Editar Alumno";
 }
 
-<h2>Editar Alumno</h2>
+<div class="page-heading">
+    <h2> Editar Alumno</h2>
+    <div class="heading-line"></div>
+</div>
 
-<form method="post">
-    <input type="hidden" asp-for="Alumno.IdAlumno" />
+<div class="card-dark">
+    <form method="post">
+        <input type="hidden" asp-for="Alumno.IdAlumno" />
+        <div class="form-grid">
 
-    <div class="form-group mb-3">
-        <label asp-for="Alumno.NombreAlumno" class="control-label">Nombre</label>
-        <input asp-for="Alumno.NombreAlumno" class="form-control" required />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Alumno.ApellidoAlumno" class="control-label">Apellido</label>
-        <input asp-for="Alumno.ApellidoAlumno" class="form-control" required />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Alumno.FechaNacimiento" class="control-label">Fecha de Nacimiento</label>
-        <input asp-for="Alumno.FechaNacimiento" type="date" class="form-control" />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Alumno.TelefonoAlumno" class="control-label">Teléfono</label>
-        <input asp-for="Alumno.TelefonoAlumno" class="form-control" />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Alumno.EmailAlumno" class="control-label">Email</label>
-        <input asp-for="Alumno.EmailAlumno" type="email" class="form-control" />
-    </div>
-    <div class="form-check mb-3">
-        <input asp-for="Alumno.ActivoAlumno" class="form-check-input" />
-        <label asp-for="Alumno.ActivoAlumno" class="form-check-label">Activo</label>
-    </div>
+            <div class="form-field">
+                <label> Nombre</label>
+                <input asp-for="Alumno.NombreAlumno" required />
+            </div>
 
-    <input type="submit" value="Guardar cambios" class="btn btn-success" />
-    <a asp-page="./Index" class="btn btn-secondary">Cancelar</a>
-</form>
+            <div class="form-field">
+                <label> Apellido</label>
+                <input asp-for="Alumno.ApellidoAlumno" required />
+            </div>
+
+            <div class="form-field">
+                <label> Fecha de Nacimiento</label>
+                <input asp-for="Alumno.FechaNacimiento" type="date" />
+            </div>
+
+            <div class="form-field">
+                <label> Email</label>
+                <input asp-for="Alumno.EmailAlumno" type="email" />
+            </div>
+
+            <div class="form-field">
+                <label> Teléfono</label>
+                <input asp-for="Alumno.TelefonoAlumno" />
+            </div>
+
+            <div class="form-field">
+                <label>Estado</label>
+                <div class="checkbox-row">
+                    <input asp-for="Alumno.ActivoAlumno" type="checkbox" />
+                    <span>Alumno activo</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-accent-green">✔ Guardar Cambios</button>
+            <a asp-page="./Index" class="btn-outline-dim">✕ Cancelar</a>
+        </div>
+    </form>
+</div>
