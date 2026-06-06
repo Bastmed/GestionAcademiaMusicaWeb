@@ -2,10 +2,18 @@
 @model AcademiaMusica.Pages.Profesores.CrearModel
 @{
     ViewData["Title"] = "Crear Profesor";
+    var especialidades = new[]
+    {
+        "Guitarra Clásica","Guitarra Eléctrica","Bajo Eléctrico","Piano","Violín",
+        "Violoncello","Contrabajo","Flauta Traversa","Clarinete","Saxofón",
+        "Trompeta","Trombón","Percusión Clásica","Batería","Arpa",
+        "Canto Lírico","Canto Popular","Charango","Quena",
+        "Teoría Musical y Solfeo","Composición","Dirección Coral"
+    };
 }
 
 <div class="page-heading">
-    <h2> Nuevo Profesor</h2>
+    <h2>Nuevo Profesor</h2>
     <div class="heading-line"></div>
 </div>
 
@@ -14,56 +22,27 @@
         <div class="form-grid">
 
             <div class="form-field">
-                <label> Nombre</label>
+                <label>Nombre</label>
                 <input asp-for="Profesor.NombreProfesor" placeholder="Ej: Carlos" required />
             </div>
 
             <div class="form-field">
-                <label> Apellido</label>
+                <label>Apellido</label>
                 <input asp-for="Profesor.ApellidoProfesor" placeholder="Ej: Ramírez" required />
             </div>
 
             <div class="form-field">
-                <label> Teléfono</label>
+                <label>Teléfono</label>
                 <input asp-for="Profesor.TelefonoProfesor" placeholder="+56 912345678" />
             </div>
 
             <div class="form-field">
-                <label> Email</label>
+                <label>Email</label>
                 <input asp-for="Profesor.EmailProfesor" type="email" placeholder="usuario@email.com" />
             </div>
 
             <div class="form-field">
-                <label> Especialidad</label>
-                <select asp-for="Profesor.Especialidad">
-                    <option value="">-- Selecciona --</option>
-                    <option>Guitarra Clásica</option>
-                    <option>Guitarra Eléctrica</option>
-                    <option>Bajo Eléctrico</option>
-                    <option>Piano</option>
-                    <option>Violín</option>
-                    <option>Violoncello</option>
-                    <option>Contrabajo</option>
-                    <option>Flauta Traversa</option>
-                    <option>Clarinete</option>
-                    <option>Saxofón</option>
-                    <option>Trompeta</option>
-                    <option>Trombón</option>
-                    <option>Percusión Clásica</option>
-                    <option>Batería</option>
-                    <option>Arpa</option>
-                    <option>Canto Lírico</option>
-                    <option>Canto Popular</option>
-                    <option>Charango</option>
-                    <option>Quena</option>
-                    <option>Teoría Musical y Solfeo</option>
-                    <option>Composición</option>
-                    <option>Dirección Coral</option>
-                </select>
-            </div>
-
-            <div class="form-field">
-                <label> Tarifa por Hora ($)</label>
+                <label>Tarifa por Hora ($)</label>
                 <input asp-for="Profesor.TarifaHora" type="number" min="1" id="tarifaInput" placeholder="Ej: 15000" required />
                 <div class="tarifa-preview" id="tarifaPreview">Con IVA (19%): $0</div>
             </div>
@@ -71,15 +50,35 @@
             <div class="form-field">
                 <label>Estado</label>
                 <div class="checkbox-row">
-                    <input asp-for="Profesor.ActivoProfesor" type="checkbox" />
+                    <input asp-for="Profesor.ActivoProfesor" type="checkbox" checked />
                     <span>Profesor activo</span>
                 </div>
             </div>
 
         </div>
 
+        
+        <div style="margin-top:24px;">
+            <label style="font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-label);">
+                Especialidades <span style="color:var(--text-muted);font-size:11px;">(Máx. 7)</span>
+            </label>
+            <div id="especialidades-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px;">
+                @foreach (var esp in especialidades)
+                {
+                    <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;cursor:pointer;transition:all 0.15s;" class="esp-label">
+                        <input type="checkbox" name="especialidadesSeleccionadas" value="@esp"
+                               style="accent-color:var(--accent-purple);width:15px;height:15px;"
+                               onchange="limitarEspecialidades(this)" />
+                        <span style="font-size:13px;color:var(--text-primary);">@esp</span>
+                    </label>
+                }
+            </div>
+            
+            <input type="hidden" name="Profesor.Especialidad" id="especialidadFinal" />
+        </div>
+
         <div class="form-actions">
-            <button type="submit" class="btn-accent-purple">✔ Registrar Profesor</button>
+            <button type="submit" class="btn-accent-purple" onclick="prepararEspecialidades()">✔ Registrar Profesor</button>
             <a asp-page="./Index" class="btn-outline-dim">✕ Cancelar</a>
         </div>
     </form>
@@ -87,11 +86,35 @@
 
 @section Scripts {
     <script>
+       
         document.getElementById('tarifaInput')?.addEventListener('input', function() {
             const v = parseFloat(this.value) || 0;
             const iva = Math.round(v * 1.19);
             document.getElementById('tarifaPreview').textContent =
                 'Con IVA (19%): $' + iva.toLocaleString('es-CL');
         });
+
+        
+        function limitarEspecialidades(cb) {
+            const checks = document.querySelectorAll('input[name="especialidadesSeleccionadas"]:checked');
+            if (checks.length > 7) {
+                cb.checked = false;
+                alert('Máximo 7 especialidades permitidas.');
+            }
+            
+            document.querySelectorAll('.esp-label').forEach(label => {
+                const input = label.querySelector('input');
+                label.style.borderColor = input.checked ? 'rgba(124,77,255,0.6)' : 'rgba(255,255,255,0.07)';
+                label.style.background = input.checked ? 'rgba(124,77,255,0.1)' : 'rgba(255,255,255,0.03)';
+            });
+        }
+
+        
+        function prepararEspecialidades() {
+            const checks = document.querySelectorAll('input[name="especialidadesSeleccionadas"]:checked');
+            const valores = Array.from(checks).map(c => c.value);
+            document.getElementById('especialidadFinal').value = valores.join(', ');
+        }
     </script>
 }
+ 

@@ -34,14 +34,15 @@
             </div>
 
             <div class="form-field">
-                <label> Teléfono</label>
+                <label>Teléfono</label>
                 <input asp-for="Alumno.TelefonoAlumno" placeholder="Ej: +56 912345678" />
             </div>
 
             <div class="form-field">
                 <label>Estado</label>
                 <div class="checkbox-row">
-                    <input asp-for="Alumno.ActivoAlumno" type="checkbox" />
+                    <!-- checked forzado para que salga marcado por defecto -->
+                    <input asp-for="Alumno.ActivoAlumno" type="checkbox" checked />
                     <span>Alumno activo</span>
                 </div>
             </div>
