@@ -449,7 +449,7 @@ body {
 /* ── Buttons ── */
 .btn-accent-green {
     background: linear-gradient(135deg, var(--accent-green), #27ae60);
-    color: #000 !important;
+    color: #fff !important;
     border: none;
     padding: 9px 22px;
     border-radius: var(--radius-sm);

@@ -3,56 +3,66 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Academia de Música</title>
+    <title>@ViewData["Title"] — Academia Konge Egg</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AcademiaMusica.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-page="/Index">🎵 Academia Kong Egg</a>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (Context.Session.GetString("usuario") != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Alumnos/Index">Alumnos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Profesores/Index">Profesores</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-page="/Instrumentos/Index">Instrumentos</a>
-                            </li>
-                        }
-                    </ul>
-                    @if (Context.Session.GetString("usuario") != null)
-                    {
-                        <span class="navbar-text text-light me-3">
-                            👤 @Context.Session.GetString("usuario")
-                        </span>
-                        <a asp-page="/Login/Logout" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
-                    }
+    <div class="page-wrapper">
+
+        @if (ViewData["OcultarMenu"] as bool? != true)
+        {
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="">🎵</div>
+                    <h1>KONGE EGG<br>AKADEMI</h1>
+                    <p>Gestión Musical</p>
                 </div>
+
+                <nav class="sidebar-nav">
+                    <a href="/Index" class="nav-home @(ViewData["Title"]?.ToString() == "Home page" ? "active" : "")">
+                        <span class="nav-icon"></span> Inicio
+                    </a>
+                    <a href="/Alumnos" class="nav-alumnos @(ViewData["Title"]?.ToString()?.Contains("Alumno") == true ? "active" : "")">
+                        <span class="nav-icon"></span> Alumnos
+                    </a>
+                    <a href="/Profesores" class="nav-profesores @(ViewData["Title"]?.ToString()?.Contains("Profesor") == true ? "active" : "")">
+                        <span class="nav-icon"></span> Profesores
+                    </a>
+                    <a href="/Instrumentos" class="nav-instrumentos @(ViewData["Title"]?.ToString()?.Contains("Instrumento") == true ? "active" : "")">
+                        <span class="nav-icon"></span> Instrumentos
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    © 2026 — KONGEGG
+                </div>
+            </aside>
+        }
+
+        <div class="main-content" style="@(ViewData["OcultarMenu"] as bool? == true ? "margin-left: 0; width: 100%;" : "")">
+            
+            @if (ViewData["OcultarMenu"] as bool? != true)
+            {
+                <div class="topbar">
+                    <div>
+                        <div class="topbar-title">@ViewData["Title"]</div>
+                        <div class="topbar-sub">Sistema de Gestión — Academia Konge Egg</div>
+                    </div>
+                </div>
+            }
+
+            <div class="content-area">
+                @RenderBody()
             </div>
-        </nav>
-    </header>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container">
-            &copy; 2026 - Academia de Música Kong Egg
         </div>
-    </footer>
+
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

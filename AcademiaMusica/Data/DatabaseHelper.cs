@@ -83,7 +83,7 @@ namespace AcademiaMusica.Data
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            var cmd = new SqlCommand("SELECT IdAlumno, NombreAlumno, ApellidoAlido, EmailAlumno, FechaNacimiento, TelefonoAlumno, ActivoAlumno, IdInstrumento FROM Alumnos WHERE IdAlumno = @Id", conn);
+            var cmd = new SqlCommand("SELECT IdAlumno, NombreAlumno, ApellidoAlumno, EmailAlumno, FechaNacimiento, TelefonoAlumno, ActivoAlumno, IdInstrumento FROM Alumnos WHERE IdAlumno = @Id", conn);
             cmd.Parameters.AddWithValue("@Id", id);
             using var reader = await cmd.ExecuteReaderAsync();
             if (await reader.ReadAsync())
