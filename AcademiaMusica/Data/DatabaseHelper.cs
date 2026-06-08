@@ -12,6 +12,47 @@ namespace AcademiaMusica.Data
             _connectionString = configuration.GetConnectionString("conexion");
         }
 
+        // ── USUARIOS ───────────────────────────────────────────
+
+        public async Task<Usuario> GetUsuario(string nombreUsuario, string contrasena)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("SELECT IdUsuario, NombreUsuario FROM Usuarios WHERE NombreUsuario = @Usuario AND Contrasena = @Contrasena", conn);
+            cmd.Parameters.AddWithValue("@Usuario", nombreUsuario);
+            cmd.Parameters.AddWithValue("@Contrasena", contrasena);
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new Usuario
+                {
+                    IdUsuario = reader.GetInt32(0),
+                    NombreUsuario = reader.GetString(1)
+                };
+            }
+            return null;
+        }
+
+        public async Task InsertUsuario(string nombreUsuario, string contrasena)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("INSERT INTO Usuarios (NombreUsuario, Contrasena) VALUES (@Usuario, @Contrasena)", conn);
+            cmd.Parameters.AddWithValue("@Usuario", nombreUsuario);
+            cmd.Parameters.AddWithValue("@Contrasena", contrasena);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<bool> UsuarioExiste(string nombreUsuario)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("SELECT COUNT(*) FROM Usuarios WHERE NombreUsuario = @Usuario", conn);
+            cmd.Parameters.AddWithValue("@Usuario", nombreUsuario);
+            var resultado = (int)await cmd.ExecuteScalarAsync();
+            return resultado > 0;
+        }
+
         // ── ALUMNOS ────────────────────────────────────────────
 
         public async Task<List<Alumno>> GetAlumnos()
@@ -42,7 +83,7 @@ namespace AcademiaMusica.Data
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            var cmd = new SqlCommand("SELECT IdAlumno, NombreAlumno, ApellidoAlumno, EmailAlumno, FechaNacimiento, TelefonoAlumno, ActivoAlumno, IdInstrumento FROM Alumnos WHERE IdAlumno = @Id", conn);
+            var cmd = new SqlCommand("SELECT IdAlumno, NombreAlumno, ApellidoAlido, EmailAlumno, FechaNacimiento, TelefonoAlumno, ActivoAlumno, IdInstrumento FROM Alumnos WHERE IdAlumno = @Id", conn);
             cmd.Parameters.AddWithValue("@Id", id);
             using var reader = await cmd.ExecuteReaderAsync();
             if (await reader.ReadAsync())
