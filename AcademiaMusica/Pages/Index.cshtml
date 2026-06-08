@@ -6,44 +6,32 @@
 
 <div class="container-fluid py-4">
 
-    <div class="mb-4 pb-2 border-bottom border-secondary border-opacity-50">
-        <h2 class="text-white text-uppercase fw-bold mb-0">Panel de Control</h2>
+    <div class="mb-4 pb-2 border-bottom" style="border-color: var(--border-dim) !important;">
+        <h2 style="color: var(--text-primary); font-family: 'Cinzel', serif; font-weight:700; font-size:22px; letter-spacing:1px;">Panel de Control</h2>
     </div>
 
-    <div class="row g-4">
-        
-        <div class="col-12 col-lg-4">
-            <a href="/Alumnos" class="card h-100 bg-dark text-decoration-none border-0 border-top border-success border-4 rounded-4 shadow">
-                <div class="card-body d-flex flex-column align-items-center text-center p-4">
-                    <span class="display-4 mb-3">🎓</span>
-                    <h5 class="card-title text-white fw-bold text-uppercase">Alumnos</h5>
-                    <p class="card-text text-secondary small mb-4">Gestión de alumnos de la academia</p>
-                    <span class="btn btn-outline-success rounded-pill px-4 fw-bold mt-auto text-uppercase text-white" style="font-size: 0.8rem;">Gestionar</span>
-                </div>
-            </a>
-        </div>
+    <div class="dash-grid">
 
-        <div class="col-12 col-lg-4">
-            <a href="/Profesores" class="card h-100 bg-dark text-decoration-none border-0 border-top border-primary border-4 rounded-4 shadow">
-                <div class="card-body d-flex flex-column align-items-center text-center p-4">
-                    <span class="display-4 mb-3">👨‍🏫</span>
-                    <h5 class="card-title text-white fw-bold text-uppercase">Profesores</h5>
-                    <p class="card-text text-secondary small mb-4">Gestión de profesores y tarifas</p>
-                    <span class="btn btn-outline-primary rounded-pill px-4 fw-bold mt-auto text-uppercase text-white" style="font-size: 0.8rem;">Gestionar</span>
-                </div>
-            </a>
-        </div>
+        <a href="/Alumnos" class="dash-card card-green">
+            <span class="card-emoji">🎓</span>
+            <h5>Alumnos</h5>
+            <p>Gestión de alumnos de la academia</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
 
-        <div class="col-12 col-lg-4">
-            <a href="/Instrumentos" class="card h-100 bg-dark text-decoration-none border-0 border-top border-info border-4 rounded-4 shadow">
-                <div class="card-body d-flex flex-column align-items-center text-center p-4">
-                    <span class="display-4 mb-3">🎸</span>
-                    <h5 class="card-title text-white fw-bold text-uppercase">Instrumentos</h5>
-                    <p class="card-text text-secondary small mb-4">Gestión de instrumentos musicales</p>
-                    <span class="btn btn-outline-info rounded-pill px-4 fw-bold mt-auto text-uppercase text-white" style="font-size: 0.8rem;">Gestionar</span>
-                </div>
-            </a>
-        </div>
+        <a href="/Profesores" class="dash-card card-purple">
+            <span class="card-emoji">👨‍🏫</span>
+            <h5>Profesores</h5>
+            <p>Gestión de profesores y tarifas</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
+
+        <a href="/Instrumentos" class="dash-card card-blue">
+            <span class="card-emoji">🎸</span>
+            <h5>Instrumentos</h5>
+            <p>Gestión de instrumentos musicales</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
 
     </div>
 </div>
