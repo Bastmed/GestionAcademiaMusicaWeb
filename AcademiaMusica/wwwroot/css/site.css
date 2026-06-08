@@ -26,7 +26,6 @@
     --radius-sm: 6px;
 }
 
-/* ── Base ── */
 html, body {
     height: 100%;
     font-family: 'Rajdhani', 'Segoe UI', sans-serif;
@@ -42,13 +41,11 @@ body {
     background-attachment: fixed;
 }
 
-/* ── Layout ── */
 .page-wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* ── Sidebar ── */
 .sidebar {
     width: 220px;
     min-height: 100vh;
@@ -162,7 +159,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* ── Main content area ── */
 .main-content {
     margin-left: 220px;
     flex: 1;
@@ -199,7 +195,6 @@ body {
     flex: 1;
 }
 
-/* ── Cards ── */
 .card-dark {
     background: var(--bg-card);
     border: 1px solid var(--border-dim);
@@ -209,7 +204,6 @@ body {
     margin-bottom: 24px;
 }
 
-/* ── Page heading ── */
 .page-heading {
     display: flex;
     align-items: center;
@@ -232,7 +226,6 @@ body {
         background: linear-gradient(to right, var(--border-dim), transparent);
     }
 
-/* ── Dashboard home cards ── */
 .dash-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -358,7 +351,6 @@ body {
         color: #000;
     }
 
-/* ── Tables ── */
 .table-dark-custom {
     width: 100%;
     border-collapse: separate;
@@ -446,7 +438,6 @@ body {
         border: 1px solid rgba(229,57,53,0.3);
     }
 
-/* ── Buttons ── */
 .btn-accent-green {
     background: linear-gradient(135deg, var(--accent-green), #27ae60);
     color: #fff !important;
@@ -545,7 +536,6 @@ body {
         background: rgba(229,57,53,0.25);
     }
 
-/* ── Forms ── */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -631,7 +621,6 @@ body {
     border-top: 1px solid var(--border-dim);
 }
 
-/* ── Search bar ── */
 .search-bar {
     position: relative;
     margin-bottom: 20px;
@@ -664,7 +653,6 @@ body {
         font-size: 15px;
     }
 
-/* ── Table toolbar ── */
 .table-toolbar {
     display: flex;
     justify-content: space-between;
@@ -674,7 +662,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* ── Overrides for Bootstrap remnants ── */
 .navbar, header {
     display: none !important;
 }
@@ -688,7 +675,6 @@ footer {
     padding: 0 !important;
 }
 
-/* ── Responsive ── */
 @media (max-width: 768px) {
     .sidebar {
         width: 0;
@@ -702,4 +688,61 @@ footer {
     .form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.btn-accent-blue {
+    background: linear-gradient(135deg, #4fc3f7, #0288d1);
+    color: #000 !important;
+    border: none;
+    padding: 9px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .btn-accent-blue:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 0 14px rgba(79,195,247,0.35);
+        transform: translateY(-1px);
+    }
+
+
+:root {
+    --text-primary: #f0f2f8; 
+    --text-muted: #a0aabb; 
+    --text-label: #cfd8e3; 
+}
+
+
+.form-field label {
+    color: #cfd8e3;
+    font-size: 12.5px;
+}
+
+
+.table-dark-custom tbody td {
+    color: #f0f2f8;
+    font-size: 14.5px;
+}
+
+
+.table-dark-custom thead th {
+    color: #a8b8cc;
+    font-size: 11.5px;
+}
+
+
+.sidebar-nav a {
+    color: #9aaabb;
+}
+
+
+.topbar-sub {
+    color: #a0aabb;
+    font-size: 12.5px;
 }

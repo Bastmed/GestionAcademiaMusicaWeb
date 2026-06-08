@@ -4,68 +4,81 @@
     ViewData["Title"] = "Editar Instrumento";
 }
 
-<h2>Editar Instrumento</h2>
+<div class="page-heading">
+    <h2>Editar Instrumento</h2>
+    <div class="heading-line"></div>
+</div>
 
-<form method="post">
-    <input type="hidden" asp-for="Instrumento.IdInstrumento" />
+<div class="card-dark">
+    <form method="post">
+        <input type="hidden" asp-for="Instrumento.IdInstrumento" />
 
-    <div class="form-group mb-3">
-        <label asp-for="Instrumento.NombreInstrumento" class="control-label">Nombre</label>
-        <input asp-for="Instrumento.NombreInstrumento" class="form-control" required />
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Instrumento.Categoria" class="control-label">Categoría</label>
-        <select asp-for="Instrumento.Categoria" class="form-control" required>
-            <option value="">-- Selecciona --</option>
-            <option>Cuerda Frotada</option>
-            <option>Cuerda Pulsada</option>
-            <option>Cuerda Percutida</option>
-            <option>Viento Madera</option>
-            <option>Viento Metal</option>
-            <option>Percusión</option>
-            <option>Teclas</option>
-            <option>Electrónico</option>
-            <option>Folclórico</option>
-        </select>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Instrumento.Marca" class="control-label">Marca</label>
-        <select asp-for="Instrumento.Marca" class="form-control">
-            <option value="">-- Selecciona --</option>
-            <option>Yamaha</option>
-            <option>Gibson</option>
-            <option>Fender</option>
-            <option>Roland</option>
-            <option>Steinway & Sons</option>
-            <option>Kawai</option>
-            <option>Pearl</option>
-            <option>Casio</option>
-            <option>Korg</option>
-            <option>Ibanez</option>
-            <option>PRS (Paul Reed Smith)</option>
-            <option>Martin</option>
-            <option>Taylor</option>
-            <option>Selmer</option>
-            <option>Bach</option>
-            <option>Gemeinhardt</option>
-            <option>Buffet Crampon</option>
-            <option>Zildjian</option>
-            <option>Meinl</option>
-            <option>DW (Drum Workshop)</option>
-        </select>
-    </div>
-    <div class="form-group mb-3">
-        <label asp-for="Instrumento.Estado" class="control-label">Estado</label>
-        <select asp-for="Instrumento.Estado" class="form-control" required>
-            <option value="">-- Selecciona --</option>
-            <option>Disponible</option>
-            <option>En uso</option>
-            <option>En mantenimiento</option>
-            <option>Deteriorado</option>
-            <option>De baja</option>
-        </select>
-    </div>
+        <div class="form-grid">
 
-    <input type="submit" value="Guardar cambios" class="btn btn-success" />
-    <a asp-page="./Index" class="btn btn-secondary">Cancelar</a>
-</form>
+            <div class="form-field">
+                <label>Nombre del Instrumento</label>
+                <input asp-for="Instrumento.NombreInstrumento" placeholder="Ej: Guitarra Clásica" required />
+            </div>
+
+            <div class="form-field">
+                <label>® Marca</label>
+                <select asp-for="Instrumento.Marca">
+                    <option value="">-- Selecciona una marca --</option>
+                    <option>Yamaha</option>
+                    <option>Gibson</option>
+                    <option>Fender</option>
+                    <option>Roland</option>
+                    <option>Steinway &amp; Sons</option>
+                    <option>Kawai</option>
+                    <option>Pearl</option>
+                    <option>Casio</option>
+                    <option>Korg</option>
+                    <option>Ibanez</option>
+                    <option>PRS (Paul Reed Smith)</option>
+                    <option>Martin</option>
+                    <option>Taylor</option>
+                    <option>Selmer</option>
+                    <option>Bach</option>
+                    <option>Gemeinhardt</option>
+                    <option>Buffet Crampon</option>
+                    <option>Zildjian</option>
+                    <option>Meinl</option>
+                    <option>DW (Drum Workshop)</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Categoría</label>
+                <select asp-for="Instrumento.Categoria" required>
+                    <option value="">-- Selecciona una categoría --</option>
+                    <option>Cuerda Frotada</option>
+                    <option>Cuerda Pulsada</option>
+                    <option>Cuerda Percutida</option>
+                    <option>Viento Madera</option>
+                    <option>Viento Metal</option>
+                    <option>Percusión</option>
+                    <option>Teclas</option>
+                    <option>Electrónico</option>
+                    <option>Folclórico</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label>Estado</label>
+                <select asp-for="Instrumento.Estado" required>
+                    <option value="">-- Selecciona un estado --</option>
+                    <option>Disponible</option>
+                    <option>En uso</option>
+                    <option>En mantenimiento</option>
+                    <option>Deteriorado</option>
+                    <option>De baja</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-accent-blue">✔ Guardar Cambios</button>
+            <a asp-page="./Index" class="btn-outline-dim">✕ Cancelar</a>
+        </div>
+    </form>
+</div>
