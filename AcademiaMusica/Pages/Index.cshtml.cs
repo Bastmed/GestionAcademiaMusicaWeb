@@ -12,9 +12,11 @@ namespace AcademiaMusica.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
-
+            if (HttpContext.Session.GetString("usuario") == null)
+                return RedirectToPage("/Login/Login");
+            return Page();
         }
     }
 }

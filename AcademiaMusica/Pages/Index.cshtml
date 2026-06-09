@@ -4,32 +4,34 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="page-heading">
-    <h2>Panel de Control</h2>
-    <div class="heading-line"></div>
-</div>
+<div class="container-fluid py-4">
 
-<div class="dash-grid">
+    <div class="mb-4 pb-2 border-bottom" style="border-color: var(--border-dim) !important;">
+        <h2 style="color: var(--text-primary); font-family: 'Cinzel', serif; font-weight:700; font-size:22px; letter-spacing:1px;">Panel de Control</h2>
+    </div>
 
-    <a href="/Alumnos" class="dash-card card-green">
-        <span class="card-emoji">🎓</span>
-        <h5>Alumnos</h5>
-        <p>Gestión de alumnos de la academia</p>
-        <span class="dash-btn">Gestionar</span>
-    </a>
+    <div class="dash-grid">
 
-    <a href="/Profesores" class="dash-card card-purple">
-        <span class="card-emoji">👨‍🏫</span>
-        <h5>Profesores</h5>
-        <p>Gestión de profesores y tarifas</p>
-        <span class="dash-btn">Gestionar</span>
-    </a>
+        <a href="/Alumnos" class="dash-card card-green">
+            <span class="card-emoji">🎓</span>
+            <h5>Alumnos</h5>
+            <p>Gestión de alumnos de la academia</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
 
-    <a href="/Instrumentos" class="dash-card card-blue">
-        <span class="card-emoji">🎸</span>
-        <h5>Instrumentos</h5>
-        <p>Gestión de instrumentos musicales</p>
-        <span class="dash-btn">Gestionar</span>
-    </a>
+        <a href="/Profesores" class="dash-card card-purple">
+            <span class="card-emoji">👨‍🏫</span>
+            <h5>Profesores</h5>
+            <p>Gestión de profesores y tarifas</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
 
+        <a href="/Instrumentos" class="dash-card card-blue">
+            <span class="card-emoji">🎸</span>
+            <h5>Instrumentos</h5>
+            <p>Gestión de instrumentos musicales</p>
+            <span class="dash-btn">Gestionar</span>
+        </a>
+
+    </div>
 </div>

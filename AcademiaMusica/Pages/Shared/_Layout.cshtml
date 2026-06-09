@@ -11,42 +11,56 @@
 <body>
     <div class="page-wrapper">
 
-        <!-- ── Sidebar ── -->
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="brand-icon">🎵</div>
-                <h1>KONGE EGG<br>AKADEMI</h1>
-                <p>Gestión Musical</p>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="/Index" class="nav-home @(ViewData["Title"]?.ToString() == "Home page" ? "active" : "")">
-                    <span class="nav-icon">🏠</span> Inicio
-                </a>
-                <a href="/Alumnos" class="nav-alumnos @(ViewData["Title"]?.ToString()?.Contains("Alumno") == true ? "active" : "")">
-                    <span class="nav-icon">🎓</span> Alumnos
-                </a>
-                <a href="/Profesores" class="nav-profesores @(ViewData["Title"]?.ToString()?.Contains("Profesor") == true ? "active" : "")">
-                    <span class="nav-icon">👨‍🏫</span> Profesores
-                </a>
-                <a href="/Instrumentos" class="nav-instrumentos @(ViewData["Title"]?.ToString()?.Contains("Instrumento") == true ? "active" : "")">
-                    <span class="nav-icon">🎸</span> Instrumentos
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                © 2026 — KONGEGG
-            </div>
-        </aside>
-
-        <!-- ── Main ── -->
-        <div class="main-content">
-            <div class="topbar">
-                <div>
-                    <div class="topbar-title">@ViewData["Title"]</div>
-                    <div class="topbar-sub">Sistema de Gestión — Academia Konge Egg</div>
+        @if (ViewData["OcultarMenu"] as bool? != true)
+        {
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div>🎵</div>
+                    <h1>KONGE EGG<br>AKADEMI</h1>
+                    <p>Gestión Musical</p>
                 </div>
-            </div>
+
+                <nav class="sidebar-nav">
+                    <a href="/Index" class="nav-home @(ViewData["Title"]?.ToString() == "Home page" ? "active" : "")">
+                        <span class="nav-icon">🏠</span> Inicio
+                    </a>
+                    <a href="/Alumnos" class="nav-alumnos @(ViewData["Title"]?.ToString()?.Contains("Alumno") == true ? "active" : "")">
+                        <span class="nav-icon">🎓</span> Alumnos
+                    </a>
+                    <a href="/Profesores" class="nav-profesores @(ViewData["Title"]?.ToString()?.Contains("Profesor") == true ? "active" : "")">
+                        <span class="nav-icon">👨‍🏫</span> Profesores
+                    </a>
+                    <a href="/Instrumentos" class="nav-instrumentos @(ViewData["Title"]?.ToString()?.Contains("Instrumento") == true ? "active" : "")">
+                        <span class="nav-icon">🎸</span> Instrumentos
+                    </a>
+                </nav>
+
+                <div style="padding: 12px 16px; border-top: 1px solid var(--border-dim);">
+                    <a href="/Login/Logout" class="nav-cerrar"
+                           style="display:flex; align-items:center; gap:10px; padding:11px 8px; color:#c62828; font-size:13px; font-weight:700; text-decoration:none; border-radius:6px; transition:background 0.2s; letter-spacing:0.5px;"
+                           onmouseover="this.style.background='rgba(198,40,40,0.08)'"
+                           onmouseout="this.style.background='transparent'">
+                        <span>🚪</span> Cerrar Sesión
+                    </a>
+                </div>
+
+                <div class="sidebar-footer">
+                    © 2026 — KONGEGG
+                </div>
+            </aside>
+        }
+
+        <div class="main-content" style="@(ViewData["OcultarMenu"] as bool? == true ? "margin-left: 0; width: 100%;" : "")">
+
+            @if (ViewData["OcultarMenu"] as bool? != true)
+            {
+                <div class="topbar">
+                    <div>
+                        <div class="topbar-title">@ViewData["Title"]</div>
+                        <div class="topbar-sub">Sistema de Gestión — Academia Konge Egg</div>
+                    </div>
+                </div>
+            }
 
             <div class="content-area">
                 @RenderBody()
