@@ -25,23 +25,22 @@
 
             <div class="form-field">
                 <label> Fecha de Nacimiento</label>
-                <input asp-for="Alumno.FechaNacimiento" type="date" />
+                <input asp-for="Alumno.FechaNacimiento" type="date" required />
             </div>
 
             <div class="form-field">
                 <label> Email</label>
-                <input asp-for="Alumno.EmailAlumno" type="email" placeholder="usuario@email.com" />
+                <input asp-for="Alumno.EmailAlumno" type="email" placeholder="usuario@email.com" required />
             </div>
 
             <div class="form-field">
                 <label>Teléfono</label>
-                <input asp-for="Alumno.TelefonoAlumno" placeholder="Ej: +56 912345678" />
+                <input asp-for="Alumno.TelefonoAlumno" placeholder="Ej: +56 912345678" required />
             </div>
 
             <div class="form-field">
                 <label>Estado</label>
                 <div class="checkbox-row">
-                    <!-- checked forzado para que salga marcado por defecto -->
                     <input asp-for="Alumno.ActivoAlumno" type="checkbox" checked />
                     <span>Alumno activo</span>
                 </div>
