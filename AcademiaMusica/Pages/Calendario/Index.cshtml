@@ -1,0 +1,168 @@
+﻿@page
+@model AcademiaMusica.Pages.Calendario.IndexModel
+@{
+    ViewData["Title"] = "Calendario de Clases";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" />
+@Html.AntiForgeryToken()
+<div class="page-heading">
+    <h2>📅 Calendario de Clases</h2>
+    <div class="heading-line"></div>
+</div>
+
+<div class="card-dark">
+
+    @if (Model.Rol == "Profesor")
+    {
+        <div style="margin-bottom:20px; padding:14px 18px; background:rgba(124,77,255,0.08); border:1px solid rgba(124,77,255,0.25); border-radius:8px;">
+            <strong style="color:var(--accent-purple);">👨‍🏫 Modo Profesor</strong>
+            <span style="color:var(--text-muted); font-size:13px;">— Haz clic y arrastra en el calendario para crear un horario disponible. Verde = disponible, Rojo = reservado.</span>
+        </div>
+    }
+    else if (Model.Rol == "Alumno")
+    {
+        <div style="margin-bottom:20px; padding:14px 18px; background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.25); border-radius:8px;">
+            <strong style="color:var(--accent-green);">🎓 Modo Alumno</strong>
+            <span style="color:var(--text-muted); font-size:13px;">— Haz clic en un horario morado para solicitar esa clase con el profesor.</span>
+        </div>
+    }
+    else
+    {
+        <div style="margin-bottom:20px; padding:14px 18px; background:rgba(229,57,53,0.08); border:1px solid rgba(229,57,53,0.25); border-radius:8px; color:#ef5350;">
+            ⚠ Tu usuario no tiene un Rol asignado (Alumno/Profesor). Contacta al administrador.
+        </div>
+    }
+
+    <div id="calendar"></div>
+</div>
+
+<!-- Mensaje de confirmación flotante -->
+<div id="toast" style="display:none; position:fixed; bottom:24px; right:24px; background:var(--bg-card); border:1px solid var(--border-green); color:var(--accent-green); padding:14px 22px; border-radius:8px; box-shadow:var(--shadow-card); z-index:999; font-size:14px;"></div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script>
+const ROL = "@Model.Rol";
+const ID_REFERENCIA = @Model.IdReferencia;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        locale: 'es',
+        height: 650,
+        slotMinTime: '08:00:00',
+        slotMaxTime: '21:00:00',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        selectable: ROL === 'Profesor',
+        editable: false,
+
+        events: function(info, successCallback, failureCallback) {
+            fetch('?handler=Eventos')
+                .then(res => res.json())
+                .then(data => successCallback(data))
+                .catch(err => failureCallback(err));
+        },
+
+        select: function(info) {
+            if (ROL !== 'Profesor') return;
+
+            if (!confirm(`¿Crear horario disponible del ${info.start.toLocaleString('es-CL')} al ${info.end.toLocaleString('es-CL')}?`)) {
+                calendar.unselect();
+                return;
+            }
+
+         fetch('?handler=CrearBloque', {
+             method: 'POST',
+             headers: {
+              'Content-Type': 'application/json',
+              'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+             },
+             body: JSON.stringify({ inicio: info.startStr, fin: info.endStr })
+         })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    mostrarToast('✔ Horario creado correctamente', 'green');
+                    calendar.refetchEvents();
+                } else {
+                    mostrarToast('✕ ' + data.mensaje, 'red');
+                }
+            });
+
+            calendar.unselect();
+        },
+
+        eventClick: function(info) {
+            if (ROL !== 'Alumno') return;
+
+            const idDisponibilidad = parseInt(info.event.id);
+            const nombreProfesor = info.event.title;
+
+            if (!confirm(`¿Solicitar clase con ${nombreProfesor} el ${info.event.start.toLocaleString('es-CL')}?`)) return;
+
+            fetch('?handler=Solicitar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({ idDisponibilidad: idDisponibilidad, idProfesor: info.event.extendedProps.idProfesor || 0 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    mostrarToast('✔ ' + data.mensaje, 'green');
+                    calendar.refetchEvents();
+                } else {
+                    mostrarToast('✕ ' + data.mensaje, 'red');
+                }
+            });
+        }
+    });
+
+    calendar.render();
+});
+
+function mostrarToast(mensaje, color) {
+    const toast = document.getElementById('toast');
+    toast.textContent = mensaje;
+    toast.style.borderColor = color === 'green' ? 'var(--border-green)' : 'rgba(229,57,53,0.4)';
+    toast.style.color = color === 'green' ? 'var(--accent-green)' : '#ef5350';
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 3500);
+}
+</script>
+
+<style>
+    .fc {
+        --fc-border-color: rgba(255,255,255,0.08);
+        --fc-page-bg-color: transparent;
+        --fc-neutral-bg-color: rgba(255,255,255,0.03);
+        --fc-list-event-hover-bg-color: rgba(255,255,255,0.05);
+        --fc-today-bg-color: rgba(124,77,255,0.08);
+        color: var(--text-primary);
+    }
+    .fc .fc-toolbar-title { color: var(--text-primary); font-family: 'Cinzel', serif; font-size: 18px; }
+    .fc .fc-button {
+        background: var(--bg-hover);
+        border: 1px solid var(--border-dim);
+        color: var(--text-primary);
+        text-transform: capitalize;
+        box-shadow: none;
+    }
+    .fc .fc-button:hover { background: rgba(124,77,255,0.2); }
+    .fc .fc-button-active { background: var(--accent-purple) !important; }
+    .fc .fc-col-header-cell { background: rgba(255,255,255,0.03); }
+    .fc .fc-col-header-cell-cushion { color: var(--text-label); }
+    .fc .fc-daygrid-day-number, .fc .fc-timegrid-slot-label { color: var(--text-muted); }
+    .fc-theme-standard td, .fc-theme-standard th { border-color: rgba(255,255,255,0.08); }
+    .fc-event { border: none; cursor: pointer; font-size: 12px; padding: 2px 4px; }
+</style>
+}

@@ -1,0 +1,91 @@
+﻿@page
+@model AcademiaMusica.Pages.Calendario.SolicitudesModel
+@{
+    ViewData["Title"] = "Solicitudes de Clase";
+}
+
+<div class="page-heading">
+    <h2>📨 @(Model.Rol == "Profesor" ? "Solicitudes Recibidas" : "Mis Solicitudes")</h2>
+    <div class="heading-line"></div>
+</div>
+
+<div class="card-dark">
+
+    @if (!Model.Solicitudes.Any())
+    {
+        <p style="color:var(--text-muted); text-align:center; padding:40px 0;">
+            @(Model.Rol == "Profesor" ? "No tienes solicitudes de clase por ahora." : "Aún no has solicitado ninguna clase.")
+        </p>
+    }
+    else
+    {
+        <table class="table-dark-custom">
+            <thead>
+                <tr>
+                    @if (Model.Rol == "Profesor")
+                    {
+                        <th>Alumno</th>
+                    }
+                    else
+                    {
+                        <th>Profesor</th>
+                    }
+                    <th>Fecha y Hora</th>
+                    <th>Solicitado el</th>
+                    <th>Estado</th>
+                    @if (Model.Rol == "Profesor")
+                    {
+                        <th>Acciones</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model.Solicitudes)
+                {
+                    var estadoColor = s.Estado switch
+                    {
+                        "Aceptada" => "background:rgba(46,204,113,0.15);color:var(--accent-green);border:1px solid var(--border-green);",
+                        "Rechazada" => "background:rgba(229,57,53,0.15);color:#ef5350;border:1px solid rgba(229,57,53,0.3);",
+                        _ => "background:rgba(255,193,7,0.15);color:#ffc107;border:1px solid rgba(255,193,7,0.3);"
+                    };
+
+                    <tr>
+                        @if (Model.Rol == "Profesor")
+                        {
+                            <td>@s.NombreAlumno</td>
+                        }
+                        else
+                        {
+                            <td>@s.NombreProfesor</td>
+                        }
+                        <td>@(s.FechaInicio?.ToString("dd/MM/yyyy HH:mm")) - @(s.FechaFin?.ToString("HH:mm"))</td>
+                        <td>@s.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><span class="badge-activo" style="@estadoColor">@s.Estado</span></td>
+                        @if (Model.Rol == "Profesor")
+                        {
+                            <td>
+                                @if (s.Estado == "Pendiente")
+                                {
+                                    <form method="post" asp-page-handler="Responder" style="display:inline">
+                                        <input type="hidden" name="idSolicitud" value="@s.IdSolicitud" />
+                                        <input type="hidden" name="aceptar" value="true" />
+                                        <button type="submit" class="btn-accent-green" style="padding:5px 14px; font-size:12px;">✔ Aceptar</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="Responder" style="display:inline">
+                                        <input type="hidden" name="idSolicitud" value="@s.IdSolicitud" />
+                                        <input type="hidden" name="aceptar" value="false" />
+                                        <button type="submit" class="btn-delete" style="padding:5px 14px;">✕ Rechazar</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span style="color:var(--text-muted); font-size:12px;">— Sin acciones —</span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

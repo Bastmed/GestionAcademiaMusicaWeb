@@ -33,6 +33,12 @@
                     <a href="/Instrumentos" class="nav-instrumentos @(ViewData["Title"]?.ToString()?.Contains("Instrumento") == true ? "active" : "")">
                         <span class="nav-icon">🎸</span> Instrumentos
                     </a>
+                    <a href="/Calendario/Index" class="nav-calendario @(ViewData["Title"]?.ToString()?.Contains("Calendario") == true ? "active" : "")">
+                        <span class="nav-icon">📅</span> Calendario
+                    </a>
+                    <a href="/Calendario/Solicitudes" class="nav-solicitudes @(ViewData["Title"]?.ToString()?.Contains("Solicitud") == true ? "active" : "")">
+                        <span class="nav-icon">📨</span> Solicitudes
+                    </a>
                 </nav>
 
                 <div style="padding: 12px 16px; border-top: 1px solid var(--border-dim);">

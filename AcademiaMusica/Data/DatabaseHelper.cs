@@ -18,7 +18,7 @@ namespace AcademiaMusica.Data
         {
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync();
-            var cmd = new SqlCommand("SELECT IdUsuario, NombreUsuario FROM Usuarios WHERE NombreUsuario = @Usuario AND Contrasena = @Contrasena", conn);
+            var cmd = new SqlCommand("SELECT IdUsuario, NombreUsuario, Rol, IdReferencia FROM Usuarios WHERE NombreUsuario = @Usuario AND Contrasena = @Contrasena", conn);
             cmd.Parameters.AddWithValue("@Usuario", nombreUsuario);
             cmd.Parameters.AddWithValue("@Contrasena", contrasena);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -27,7 +27,9 @@ namespace AcademiaMusica.Data
                 return new Usuario
                 {
                     IdUsuario = reader.GetInt32(0),
-                    NombreUsuario = reader.GetString(1)
+                    NombreUsuario = reader.GetString(1),
+                    Rol = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    IdReferencia = reader.IsDBNull(3) ? null : reader.GetInt32(3)
                 };
             }
             return null;
@@ -309,6 +311,189 @@ namespace AcademiaMusica.Data
             var cmd = new SqlCommand("DELETE FROM Profesores WHERE IdProfesor = @Id", conn);
             cmd.Parameters.AddWithValue("@Id", id);
             await cmd.ExecuteNonQueryAsync();
+        }
+
+        // ── DISPONIBILIDAD (calendario del profesor) ────────────
+
+        public async Task InsertDisponibilidad(int idProfesor, DateTime inicio, DateTime fin)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("INSERT INTO Disponibilidad (IdProfesor, FechaInicio, FechaFin, Reservado) VALUES (@IdProfesor, @Inicio, @Fin, 0)", conn);
+            cmd.Parameters.AddWithValue("@IdProfesor", idProfesor);
+            cmd.Parameters.AddWithValue("@Inicio", inicio);
+            cmd.Parameters.AddWithValue("@Fin", fin);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<List<Disponibilidad>> GetDisponibilidadPorProfesor(int idProfesor)
+        {
+            var lista = new List<Disponibilidad>();
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("SELECT IdDisponibilidad, IdProfesor, FechaInicio, FechaFin, Reservado FROM Disponibilidad WHERE IdProfesor = @IdProfesor", conn);
+            cmd.Parameters.AddWithValue("@IdProfesor", idProfesor);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Disponibilidad
+                {
+                    IdDisponibilidad = reader.GetInt32(0),
+                    IdProfesor = reader.GetInt32(1),
+                    FechaInicio = reader.GetDateTime(2),
+                    FechaFin = reader.GetDateTime(3),
+                    Reservado = reader.GetBoolean(4)
+                });
+            }
+            return lista;
+        }
+
+        public async Task<List<Disponibilidad>> GetDisponibilidadGeneral()
+        {
+            var lista = new List<Disponibilidad>();
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand(@"
+                SELECT d.IdDisponibilidad, d.IdProfesor, d.FechaInicio, d.FechaFin, d.Reservado,
+                       p.NombreProfesor + ' ' + p.ApellidoProfesor AS NombreCompleto
+                FROM Disponibilidad d
+                INNER JOIN Profesores p ON p.IdProfesor = d.IdProfesor
+                WHERE d.Reservado = 0 AND d.FechaInicio >= GETDATE()", conn);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Disponibilidad
+                {
+                    IdDisponibilidad = reader.GetInt32(0),
+                    IdProfesor = reader.GetInt32(1),
+                    FechaInicio = reader.GetDateTime(2),
+                    FechaFin = reader.GetDateTime(3),
+                    Reservado = reader.GetBoolean(4),
+                    NombreProfesor = reader.GetString(5)
+                });
+            }
+            return lista;
+        }
+
+        public async Task DeleteDisponibilidad(int id)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("DELETE FROM Disponibilidad WHERE IdDisponibilidad = @Id AND Reservado = 0", conn);
+            cmd.Parameters.AddWithValue("@Id", id);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        // ── SOLICITUDES DE CLASE ─────────────────────────────────
+
+        public async Task InsertSolicitud(int idDisponibilidad, int idAlumno, int idProfesor)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            var cmd = new SqlCommand(@"
+                INSERT INTO SolicitudesClase (IdDisponibilidad, IdAlumno, IdProfesor, Estado, FechaSolicitud)
+                VALUES (@IdDisp, @IdAlumno, @IdProfesor, 'Pendiente', GETDATE())", conn);
+            cmd.Parameters.AddWithValue("@IdDisp", idDisponibilidad);
+            cmd.Parameters.AddWithValue("@IdAlumno", idAlumno);
+            cmd.Parameters.AddWithValue("@IdProfesor", idProfesor);
+            await cmd.ExecuteNonQueryAsync();
+
+            var cmdUpdate = new SqlCommand("UPDATE Disponibilidad SET Reservado = 1 WHERE IdDisponibilidad = @Id", conn);
+            cmdUpdate.Parameters.AddWithValue("@Id", idDisponibilidad);
+            await cmdUpdate.ExecuteNonQueryAsync();
+        }
+
+        public async Task<List<SolicitudClase>> GetSolicitudesPorProfesor(int idProfesor)
+        {
+            var lista = new List<SolicitudClase>();
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand(@"
+                SELECT s.IdSolicitud, s.IdDisponibilidad, s.IdAlumno, s.IdProfesor, s.Estado, s.FechaSolicitud,
+                       a.NombreAlumno + ' ' + a.ApellidoAlumno AS NombreAlumno,
+                       d.FechaInicio, d.FechaFin
+                FROM SolicitudesClase s
+                INNER JOIN Alumnos a ON a.IdAlumno = s.IdAlumno
+                INNER JOIN Disponibilidad d ON d.IdDisponibilidad = s.IdDisponibilidad
+                WHERE s.IdProfesor = @IdProfesor
+                ORDER BY s.FechaSolicitud DESC", conn);
+            cmd.Parameters.AddWithValue("@IdProfesor", idProfesor);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new SolicitudClase
+                {
+                    IdSolicitud = reader.GetInt32(0),
+                    IdDisponibilidad = reader.GetInt32(1),
+                    IdAlumno = reader.GetInt32(2),
+                    IdProfesor = reader.GetInt32(3),
+                    Estado = reader.GetString(4),
+                    FechaSolicitud = reader.GetDateTime(5),
+                    NombreAlumno = reader.GetString(6),
+                    FechaInicio = reader.GetDateTime(7),
+                    FechaFin = reader.GetDateTime(8)
+                });
+            }
+            return lista;
+        }
+
+        public async Task<List<SolicitudClase>> GetSolicitudesPorAlumno(int idAlumno)
+        {
+            var lista = new List<SolicitudClase>();
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand(@"
+                SELECT s.IdSolicitud, s.IdDisponibilidad, s.IdAlumno, s.IdProfesor, s.Estado, s.FechaSolicitud,
+                       p.NombreProfesor + ' ' + p.ApellidoProfesor AS NombreProfesor,
+                       d.FechaInicio, d.FechaFin
+                FROM SolicitudesClase s
+                INNER JOIN Profesores p ON p.IdProfesor = s.IdProfesor
+                INNER JOIN Disponibilidad d ON d.IdDisponibilidad = s.IdDisponibilidad
+                WHERE s.IdAlumno = @IdAlumno
+                ORDER BY s.FechaSolicitud DESC", conn);
+            cmd.Parameters.AddWithValue("@IdAlumno", idAlumno);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new SolicitudClase
+                {
+                    IdSolicitud = reader.GetInt32(0),
+                    IdDisponibilidad = reader.GetInt32(1),
+                    IdAlumno = reader.GetInt32(2),
+                    IdProfesor = reader.GetInt32(3),
+                    Estado = reader.GetString(4),
+                    FechaSolicitud = reader.GetDateTime(5),
+                    NombreProfesor = reader.GetString(6),
+                    FechaInicio = reader.GetDateTime(7),
+                    FechaFin = reader.GetDateTime(8)
+                });
+            }
+            return lista;
+        }
+
+        public async Task ResponderSolicitud(int idSolicitud, bool aceptar)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            string nuevoEstado = aceptar ? "Aceptada" : "Rechazada";
+
+            var cmd = new SqlCommand("UPDATE SolicitudesClase SET Estado = @Estado WHERE IdSolicitud = @Id", conn);
+            cmd.Parameters.AddWithValue("@Estado", nuevoEstado);
+            cmd.Parameters.AddWithValue("@Id", idSolicitud);
+            await cmd.ExecuteNonQueryAsync();
+
+            if (!aceptar)
+            {
+                var cmdGetDisp = new SqlCommand("SELECT IdDisponibilidad FROM SolicitudesClase WHERE IdSolicitud = @Id", conn);
+                cmdGetDisp.Parameters.AddWithValue("@Id", idSolicitud);
+                var idDisp = (int)await cmdGetDisp.ExecuteScalarAsync();
+
+                var cmdLiberar = new SqlCommand("UPDATE Disponibilidad SET Reservado = 0 WHERE IdDisponibilidad = @IdDisp", conn);
+                cmdLiberar.Parameters.AddWithValue("@IdDisp", idDisp);
+                await cmdLiberar.ExecuteNonQueryAsync();
+            }
         }
     }
 }

@@ -2,53 +2,35 @@
 @model AcademiaMusica.Pages.Login.LoginModel
 @{
     ViewData["Title"] = "Iniciar Sesión";
-    ViewData["OcultarMenu"] = true;
-    Layout = null;
 }
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Iniciar Sesión — Academia Konge Egg</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet" />
-</head>
-<body style="margin:0; background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 50%, #ede7f6 100%); min-height:100vh; display:flex; align-items:center; justify-content:center;">
 
-    <div class="login-card">
-        <div class="login-logo">
-            <img src="~/images/logo_inicio_sesion.png" alt="LogoInicioSesion" style="width:64px; height:64px; border-radius:50%; object-fit:cover; margin: 0 auto 12px; display:block;" />
-            <h2>KONGE EGG AKADEMI</h2>
-            <p>Sistema de Gestión Musical</p>
-        </div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h4 class="card-title text-center mb-4">🎵 Iniciar Sesión</h4>
 
-        @if (!string.IsNullOrEmpty(Model.MensajeError))
-        {
-            <div class="alert alert-danger rounded-3 mb-4" style="font-size:13px;">
-                ⚠️ @Model.MensajeError
+                @if (!string.IsNullOrEmpty(Model.MensajeError))
+                {
+                    <div class="alert alert-danger">@Model.MensajeError</div>
+                }
+
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label>Usuario</label>
+                        <input name="NombreUsuario" class="form-control" required autofocus />
+                    </div>
+                    <div class="form-group mb-4">
+                        <label>Contraseña</label>
+                        <input name="Contrasena" type="password" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Entrar</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a asp-page="/Login/Registro">¿No tienes cuenta? Regístrate</a>
+                </div>
             </div>
-        }
-
-        <form method="post">
-            <div class="login-field">
-                <label>👤 Usuario</label>
-                <input name="NombreUsuario" placeholder="Ingresa tu usuario" required autofocus />
-            </div>
-            <div class="login-field">
-                <label>🔒 Contraseña</label>
-                <input name="Contrasena" type="password" placeholder="Ingresa tu contraseña" required />
-            </div>
-            <button type="submit" class="login-btn">Iniciar Sesión</button>
-        </form>
-
-        <div class="login-footer">
-            ¿No tienes cuenta? <a asp-page="/Login/Registro">Regístrate aquí</a>
         </div>
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>

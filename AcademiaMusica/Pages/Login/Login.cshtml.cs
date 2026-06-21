@@ -35,6 +35,10 @@ namespace AcademiaMusica.Pages.Login
             if (usuario != null)
             {
                 HttpContext.Session.SetString("usuario", usuario.NombreUsuario);
+                HttpContext.Session.SetString("rol", usuario.Rol ?? "");
+                if (usuario.IdReferencia.HasValue)
+                    HttpContext.Session.SetInt32("idReferencia", usuario.IdReferencia.Value);
+
                 return RedirectToPage("/Index");
             }
 
