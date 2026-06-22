@@ -39,6 +39,12 @@
                     <a href="/Calendario/Solicitudes" class="nav-solicitudes @(ViewData["Title"]?.ToString()?.Contains("Solicitud") == true ? "active" : "")">
                         <span class="nav-icon">📨</span> Solicitudes
                     </a>
+                    @if (Context.Session.GetString("rol") == "Admin")
+                    {
+                        <a href="/Admin/Usuarios" class="nav-admin @(ViewData["Title"]?.ToString()?.Contains("Usuarios") == true ? "active" : "")">
+                            <span class="nav-icon">🛡️</span> Admin
+                        </a>
+                    }
                 </nav>
 
                 <div style="padding: 12px 16px; border-top: 1px solid var(--border-dim);">

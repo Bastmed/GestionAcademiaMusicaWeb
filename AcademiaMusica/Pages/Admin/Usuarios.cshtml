@@ -1,0 +1,149 @@
+﻿@page
+@model AcademiaMusica.Pages.Admin.UsuariosModel
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="page-heading">
+    <h2>Panel de Administrador</h2>
+    <div class="heading-line"></div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Mensaje))
+{
+    <div style="margin-bottom:16px; padding:12px 18px; background:rgba(46,204,113,0.1); border:1px solid var(--border-green); border-radius:8px; color:var(--accent-green); font-size:13px;">
+        ✔ @Model.Mensaje
+    </div>
+}
+
+<div class="card-dark">
+    <div class="table-toolbar">
+        <span style="color:var(--text-muted); font-size:13px;">@Model.Usuarios.Count usuario(s) registrado(s)</span>
+        <div class="search-bar" style="width:280px">
+            <span class="search-icon"></span>
+            <input type="text" placeholder="Buscar usuario..." oninput="filtrarTabla(this.value)" />
+        </div>
+    </div>
+
+    <table class="table-dark-custom" id="tablaUsuarios">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol actual</th>
+                <th>ID Referencia</th>
+                <th>Asignar Rol</th>
+                <th>Vincular a</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model.Usuarios)
+            {
+                <tr>
+                    <td style="color:var(--text-muted)">@u.IdUsuario</td>
+                    <td><strong>@u.NombreUsuario</strong></td>
+                    <td>
+                        @if (u.Rol == "Admin")
+                        {
+                            <span class="badge-activo" style="background:rgba(229,57,53,0.15);color:#ef5350;border:1px solid rgba(229,57,53,0.3);">Admin</span>
+                        }
+                        else if (u.Rol == "Profesor")
+                        {
+                            <span class="badge-activo" style="background:rgba(124,77,255,0.15);color:var(--accent-purple);border:1px solid rgba(124,77,255,0.3);">Profesor</span>
+                        }
+                        else if (u.Rol == "Alumno")
+                        {
+                            <span class="badge-activo si">Alumno</span>
+                        }
+                        else
+                        {
+                            <span class="badge-activo no">Sin rol</span>
+                        }
+                    </td>
+                    <td style="color:var(--text-muted)">@(u.IdReferencia?.ToString() ?? "—")</td>
+
+                    <td>
+                        <form method="post" asp-page-handler="AsignarRol" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input type="hidden" name="idUsuario" value="@u.IdUsuario" />
+
+                            <select name="rol" class="form-select form-select-sm"
+                                    style="background:var(--bg-hover); border:1px solid var(--border-dim); color:var(--text-primary); border-radius:6px; padding:4px 8px; font-size:12px; width:110px;"
+                                    onchange="actualizarOpciones(this, @u.IdUsuario)">
+                                <option value="" selected="@(string.IsNullOrEmpty(u.Rol) ? "selected" : null)">Sin rol</option>
+                                <option value="Admin" selected="@(u.Rol == "Admin" ? "selected" : null)">Admin</option>
+                                <option value="Profesor" selected="@(u.Rol == "Profesor" ? "selected" : null)">Profesor</option>
+                                <option value="Alumno" selected="@(u.Rol == "Alumno" ? "selected" : null)">Alumno</option>
+                            </select>
+
+                            <select name="idReferencia" id="ref-@u.IdUsuario"
+                                    style="background:var(--bg-hover); border:1px solid var(--border-dim); color:var(--text-primary); border-radius:6px; padding:4px 8px; font-size:12px; width:160px;">
+                                <option value="">— ninguno —</option>
+                                @if (u.Rol == "Profesor")
+                                {
+                                    foreach (var p in Model.Profesores)
+                                    {
+                                        <option value="@p.IdProfesor" selected="@(u.IdReferencia == p.IdProfesor ? "selected" : null)">
+                                            @p.NombreProfesor @p.ApellidoProfesor
+                                        </option>
+                                    }
+                                }
+                                else if (u.Rol == "Alumno")
+                                {
+                                    foreach (var a in Model.Alumnos)
+                                    {
+                                        <option value="@a.IdAlumno" selected="@(u.IdReferencia == a.IdAlumno ? "selected" : null)">
+                                            @a.NombreAlumno @a.ApellidoAlumno
+                                        </option>
+                                    }
+                                }
+                            </select>
+
+                            <button type="submit" class="btn-accent-purple" style="padding:5px 14px; font-size:12px;">
+                                Guardar
+                            </button>
+                        </form>
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+<script>
+    // Datos de profesores y alumnos para poblar el select dinámicamente
+    const profesores = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Profesores.Select(p => new { id = p.IdProfesor, nombre = p.NombreProfesor + " " + p.ApellidoProfesor })
+    ));
+    const alumnos = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Alumnos.Select(a => new { id = a.IdAlumno, nombre = a.NombreAlumno + " " + a.ApellidoAlumno })
+    ));
+
+    function actualizarOpciones(selectRol, idUsuario) {
+        const rol = selectRol.value;
+        const selectRef = document.getElementById('ref-' + idUsuario);
+        selectRef.innerHTML = '<option value="">— ninguno —</option>';
+
+        let lista = [];
+        if (rol === 'Profesor') lista = profesores;
+        else if (rol === 'Alumno') lista = alumnos;
+
+        lista.forEach(function(item) {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = item.nombre;
+            selectRef.appendChild(opt);
+        });
+    }
+
+    function filtrarTabla(q) {
+        q = q.toLowerCase();
+        document.querySelectorAll('#tablaUsuarios tbody tr').forEach(tr => {
+            tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+</script>
+}

@@ -581,5 +581,40 @@ namespace AcademiaMusica.Data
                 await cmdLiberar.ExecuteNonQueryAsync();
             }
         }
+
+        // ── ADMIN: obtener todos los usuarios ─────────────────────────────────
+
+        public async Task<List<Usuario>> GetUsuarios()
+        {
+            var lista = new List<Usuario>();
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("SELECT IdUsuario, NombreUsuario, Rol, IdReferencia FROM Usuarios", conn);
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                lista.Add(new Usuario
+                {
+                    IdUsuario = reader.GetInt32(0),
+                    NombreUsuario = reader.GetString(1),
+                    Rol = reader.IsDBNull(2) ? null : reader.GetString(2),
+                    IdReferencia = reader.IsDBNull(3) ? null : reader.GetInt32(3)
+                });
+            }
+            return lista;
+        }
+
+        // ── ADMIN: asignar rol e IdReferencia a un usuario ────────────────────
+
+        public async Task AsignarRol(int idUsuario, string rol, int? idReferencia)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand("UPDATE Usuarios SET Rol = @Rol, IdReferencia = @IdReferencia WHERE IdUsuario = @Id", conn);
+            cmd.Parameters.AddWithValue("@Rol", (object?)rol ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@IdReferencia", (object?)idReferencia ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Id", idUsuario);
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 }
