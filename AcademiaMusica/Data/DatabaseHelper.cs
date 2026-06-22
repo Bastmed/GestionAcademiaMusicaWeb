@@ -471,6 +471,92 @@ namespace AcademiaMusica.Data
             }
             return lista;
         }
+        public async Task<SolicitudClase> GetSolicitudById(int idSolicitud)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+            var cmd = new SqlCommand(@"
+        SELECT s.IdSolicitud, s.IdDisponibilidad, s.IdAlumno, s.IdProfesor, s.Estado, s.FechaSolicitud,
+               a.NombreAlumno + ' ' + a.ApellidoAlumno AS NombreAlumno,
+               p.NombreProfesor + ' ' + p.ApellidoProfesor AS NombreProfesor,
+               d.FechaInicio, d.FechaFin,
+               a.EmailAlumno,
+               p.EmailProfesor
+        FROM SolicitudesClase s
+        INNER JOIN Alumnos a ON a.IdAlumno = s.IdAlumno
+        INNER JOIN Profesores p ON p.IdProfesor = s.IdProfesor
+        INNER JOIN Disponibilidad d ON d.IdDisponibilidad = s.IdDisponibilidad
+        WHERE s.IdSolicitud = @Id", conn);
+            cmd.Parameters.AddWithValue("@Id", idSolicitud);
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new SolicitudClase
+                {
+                    IdSolicitud = reader.GetInt32(0),
+                    IdDisponibilidad = reader.GetInt32(1),
+                    IdAlumno = reader.GetInt32(2),
+                    IdProfesor = reader.GetInt32(3),
+                    Estado = reader.GetString(4),
+                    FechaSolicitud = reader.GetDateTime(5),
+                    NombreAlumno = reader.GetString(6),
+                    NombreProfesor = reader.GetString(7),
+                    FechaInicio = reader.GetDateTime(8),
+                    FechaFin = reader.GetDateTime(9),
+                    EmailAlumno = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    EmailProfesor = reader.IsDBNull(11) ? "" : reader.GetString(11)
+                };
+            }
+            return null;
+        }
+
+        // Versión de InsertSolicitud que devuelve los datos completos para el correo al profesor
+        public async Task<SolicitudClase> InsertSolicitudYObtenerDatos(int idDisponibilidad, int idAlumno, int idProfesor)
+        {
+            using var conn = new SqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // Insertar solicitud
+            var cmdInsert = new SqlCommand(@"
+        INSERT INTO SolicitudesClase (IdDisponibilidad, IdAlumno, IdProfesor, Estado, FechaSolicitud)
+        VALUES (@IdDisp, @IdAlumno, @IdProfesor, 'Pendiente', GETDATE());
+        SELECT SCOPE_IDENTITY();", conn);
+            cmdInsert.Parameters.AddWithValue("@IdDisp", idDisponibilidad);
+            cmdInsert.Parameters.AddWithValue("@IdAlumno", idAlumno);
+            cmdInsert.Parameters.AddWithValue("@IdProfesor", idProfesor);
+            var nuevoId = Convert.ToInt32(await cmdInsert.ExecuteScalarAsync());
+
+            // Marcar bloque como reservado
+            var cmdUpdate = new SqlCommand("UPDATE Disponibilidad SET Reservado = 1 WHERE IdDisponibilidad = @Id", conn);
+            cmdUpdate.Parameters.AddWithValue("@Id", idDisponibilidad);
+            await cmdUpdate.ExecuteNonQueryAsync();
+
+            // Obtener datos completos para el correo
+            var cmdGet = new SqlCommand(@"
+        SELECT a.NombreAlumno + ' ' + a.ApellidoAlumno, p.NombreProfesor + ' ' + p.ApellidoProfesor,
+               d.FechaInicio, d.FechaFin, a.EmailAlumno, p.EmailProfesor
+        FROM SolicitudesClase s
+        INNER JOIN Alumnos a ON a.IdAlumno = s.IdAlumno
+        INNER JOIN Profesores p ON p.IdProfesor = s.IdProfesor
+        INNER JOIN Disponibilidad d ON d.IdDisponibilidad = s.IdDisponibilidad
+        WHERE s.IdSolicitud = @Id", conn);
+            cmdGet.Parameters.AddWithValue("@Id", nuevoId);
+            using var reader = await cmdGet.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new SolicitudClase
+                {
+                    IdSolicitud = nuevoId,
+                    NombreAlumno = reader.GetString(0),
+                    NombreProfesor = reader.GetString(1),
+                    FechaInicio = reader.GetDateTime(2),
+                    FechaFin = reader.GetDateTime(3),
+                    EmailAlumno = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    EmailProfesor = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                };
+            }
+            return null;
+        }
 
         public async Task ResponderSolicitud(int idSolicitud, bool aceptar)
         {
