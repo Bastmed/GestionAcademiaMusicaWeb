@@ -184,20 +184,23 @@ namespace AcademiaMusica.Pages.Calendario
 
         private void ComposeHeader(IContainer container)
         {
-            container.Row(row =>
+            container.Column(col =>
             {
-                row.RelativeItem().Column(col =>
+                col.Item().Row(row =>
                 {
-                    col.Item().Text("ACADEMIA KONGE EGG")
-                        .FontSize(22).Bold().FontColor("#7c4dff");
-                    col.Item().Text("Sistema de Gestión Musical")
-                        .FontSize(11).FontColor("#888888");
+                    row.RelativeItem().Column(inner =>
+                    {
+                        inner.Item().Text("ACADEMIA KONGE EGG")
+                            .FontSize(22).Bold().FontColor("#7c4dff");
+                        inner.Item().Text("Sistema de Gestión Musical")
+                            .FontSize(11).FontColor("#888888");
+                    });
+
+                    row.ConstantItem(100).Height(60).Placeholder();
                 });
 
-                row.ConstantItem(100).Height(60).Placeholder();
+                col.Item().PaddingTop(8).LineHorizontal(2).LineColor("#7c4dff");
             });
-
-            container.PaddingTop(8).LineHorizontal(2).LineColor("#7c4dff");
         }
 
         private void ComposeContent(IContainer container, SolicitudClase solicitud)
