@@ -13,15 +13,25 @@ namespace AcademiaMusica.Pages.Alumnos
         {
             _databaseHelper = databaseHelper;
         }
+
         [BindProperty]
         public Alumno Alumno { get; set; }
+
         public IActionResult OnGet()
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol == "Alumno")
+                return RedirectToPage("/Index");
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol == "Alumno")
+                return RedirectToPage("/Index");
+
             await _databaseHelper.InsertAlumnos(
                 Alumno.NombreAlumno,
                 Alumno.ApellidoAlumno,

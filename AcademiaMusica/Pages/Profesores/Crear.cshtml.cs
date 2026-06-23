@@ -19,11 +19,19 @@ namespace AcademiaMusica.Pages.Profesores
 
         public IActionResult OnGet()
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol != "Admin")
+                return RedirectToPage("/Index");
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol != "Admin")
+                return RedirectToPage("/Index");
+
             if (!ModelState.IsValid) return Page();
             await _db.InsertProfesor(Profesor);
             return RedirectToPage("./Index");

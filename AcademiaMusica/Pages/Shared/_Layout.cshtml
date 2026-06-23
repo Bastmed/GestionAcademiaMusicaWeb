@@ -13,6 +13,8 @@
 
         @if (ViewData["OcultarMenu"] as bool? != true)
         {
+            var rolActual = Context.Session.GetString("rol") ?? "";
+
             <aside class="sidebar">
                 <div class="sidebar-brand">
                     <div>🎵</div>
@@ -24,22 +26,31 @@
                     <a href="/Index" class="nav-home @(ViewData["Title"]?.ToString() == "Home page" ? "active" : "")">
                         <span class="nav-icon">🏠</span> Inicio
                     </a>
-                    <a href="/Alumnos" class="nav-alumnos @(ViewData["Title"]?.ToString()?.Contains("Alumno") == true ? "active" : "")">
-                        <span class="nav-icon">🎓</span> Alumnos
-                    </a>
-                    <a href="/Profesores" class="nav-profesores @(ViewData["Title"]?.ToString()?.Contains("Profesor") == true ? "active" : "")">
-                        <span class="nav-icon">👨‍🏫</span> Profesores
-                    </a>
+
+                    @* Alumnos y Profesores: solo Admin y Profesor *@
+                    @if (rolActual == "Admin" || rolActual == "Profesor")
+                    {
+                        <a href="/Alumnos" class="nav-alumnos @(ViewData["Title"]?.ToString()?.Contains("Alumno") == true ? "active" : "")">
+                            <span class="nav-icon">🎓</span> Alumnos
+                        </a>
+                        <a href="/Profesores" class="nav-profesores @(ViewData["Title"]?.ToString()?.Contains("Profesor") == true ? "active" : "")">
+                            <span class="nav-icon">👨‍🏫</span> Profesores
+                        </a>
+                    }
+
+                    @* Instrumentos: todos pueden verlo *@
                     <a href="/Instrumentos" class="nav-instrumentos @(ViewData["Title"]?.ToString()?.Contains("Instrumento") == true ? "active" : "")">
                         <span class="nav-icon">🎸</span> Instrumentos
                     </a>
+
                     <a href="/Calendario/Index" class="nav-calendario @(ViewData["Title"]?.ToString()?.Contains("Calendario") == true ? "active" : "")">
                         <span class="nav-icon">📅</span> Calendario
                     </a>
                     <a href="/Calendario/Solicitudes" class="nav-solicitudes @(ViewData["Title"]?.ToString()?.Contains("Solicitud") == true ? "active" : "")">
                         <span class="nav-icon">📨</span> Solicitudes
                     </a>
-                    @if (Context.Session.GetString("rol") == "Admin")
+
+                    @if (rolActual == "Admin")
                     {
                         <a href="/Admin/Usuarios" class="nav-admin @(ViewData["Title"]?.ToString()?.Contains("Usuarios") == true ? "active" : "")">
                             <span class="nav-icon">🛡️</span> Admin

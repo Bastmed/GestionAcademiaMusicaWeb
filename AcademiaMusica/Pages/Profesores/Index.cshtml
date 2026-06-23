@@ -11,7 +11,10 @@
 
 <div class="card-dark">
     <div class="table-toolbar">
-        <a asp-page="./Crear" class="btn-accent-purple">+ Nuevo Profesor</a>
+        @if (Model.PuedeModificar)
+        {
+            <a asp-page="./Crear" class="btn-accent-purple">+ Nuevo Profesor</a>
+        }
         <div class="search-bar" style="width:280px">
             <span class="search-icon"></span>
             <input type="text" placeholder="Buscar profesor..." oninput="filtrarTabla(this.value)" />
@@ -29,7 +32,10 @@
                 <th>Tarifa/Hora</th>
                 <th>Con IVA</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                @if (Model.PuedeModificar)
+                {
+                    <th>Acciones</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -53,15 +59,18 @@
                             <span class="badge-activo no">Inactivo</span>
                         }
                     </td>
-                    <td>
-                        <a asp-page="./Editar" asp-route-id="@p.IdProfesor" class="btn-edit">✏ Editar</a>
-                        <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.IdProfesor" style="display:inline">
-                            <button type="submit" class="btn-delete"
-                                    onclick="return confirm('¿Eliminar a @p.NombreProfesor?')">
-                                Eliminar
-                            </button>
-                        </form>
-                    </td>
+                    @if (Model.PuedeModificar)
+                    {
+                        <td>
+                            <a asp-page="./Editar" asp-route-id="@p.IdProfesor" class="btn-edit">✏ Editar</a>
+                            <form method="post" asp-page-handler="Eliminar" asp-route-id="@p.IdProfesor" style="display:inline">
+                                <button type="submit" class="btn-delete"
+                                        onclick="return confirm('¿Eliminar a @p.NombreProfesor?')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

@@ -19,6 +19,10 @@ namespace AcademiaMusica.Pages.Alumnos
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol == "Alumno")
+                return RedirectToPage("/Index");
+
             Alumno = await _db.GetAlumnoById(id);
             if (Alumno == null) return NotFound();
             return Page();
@@ -26,6 +30,10 @@ namespace AcademiaMusica.Pages.Alumnos
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var rol = HttpContext.Session.GetString("rol");
+            if (rol == "Alumno")
+                return RedirectToPage("/Index");
+
             if (!ModelState.IsValid) return Page();
             await _db.UpdateAlumno(Alumno);
             return RedirectToPage("./Index");
